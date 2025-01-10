@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require("../app");
+var debug = require("debug")("express-mysql:server");
+var http = require("http");
+
+// 设置端口号
+var port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
+
+// 创建HTTP服务器
+var server = http.createServer(app);
+
+// 监听端口号
+server.listen(port, function () {
+	console.log(`服务器启动成功：http://localhost:${port}/`);
+});
+
+// 错误处理
+server.on("error", onError);
+// 监听事件
+server.on("listening", onListening);
+
+// 端口规范
+function normalizePort(val) {
+	var port = parseInt(val, 10);
+	if (isNaN(port)) {
+		return val;
+	}
+	if (port >= 0) {
+		return port;
+	}
+	return false;
+}
+
+// 错误处理
+function onError(error) {
+	if (error.syscall !== "listen") {
+		throw error;
+	}
+	var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+	// 处理特定的监听错误
+	switch (error.code) {
+		case "EACCES":
+			console.error(bind + " requires elevated privileges");
+			process.exit(1);
+			break;
+		case "EADDRINUSE":
+			console.error(bind + " is already in use");
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
+}
+
+// 监听事件
+function onListening() {
+	var addr = server.address();
+	var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+	debug("Listening on " + bind);
+}
