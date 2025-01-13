@@ -1,5 +1,4 @@
 const mysql = require("mysql2");
-// var router = express.Router();
 
 // 创建数据库连接池
 const pool = mysql.createPool({
@@ -10,7 +9,6 @@ const pool = mysql.createPool({
 	database: "zhou" // 数据库名称
 });
 
-// 3、数据校验封装
 // 封装查询函数
 const query = (sql, params) => {
 	return new Promise((resolve, reject) => {

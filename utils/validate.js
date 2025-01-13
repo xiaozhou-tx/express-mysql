@@ -1,5 +1,6 @@
 const sendResponse = require("./response.js");
 const { validationResult } = require("express-validator");
+const { decrypt } = require("./sm4.js");
 
 /**
  * 通用验证中间件生成器
@@ -14,6 +15,11 @@ const { validationResult } = require("express-validator");
  */
 const validate = (validations) => {
 	return async (req, res, next) => {
+		// 是否加密
+		let isEncryption = req.headers.isencryption;
+		// 解密post
+		if (isEncryption == "true") req.body = decrypt(req.body.toString());
+		console.log("请求：", req.body);
 		// 执行验证规则
 		for (const validation of validations) {
 			const result = await validation.run(req);

@@ -1,8 +1,6 @@
 const sendResponse = require("./response.js");
 const jwt = require("jsonwebtoken");
-
-const SECRET_KEY = "zhou-secret-key-123456"; // 秘钥
-const EXPIRES_IN = "1m"; // 过期时间 1天
+const { SECRET_KEY, EXPIRES_IN } = require("./config.js");
 
 /**
  * 生成 token

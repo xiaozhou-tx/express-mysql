@@ -298,3 +298,53 @@
   // 生成uuid
   const uuid = uuidv4();
   ```
+
+# 10、sm4 加解密
+
+- 安装：npm install gm-crypt
+- 参数解密(在封装的验证数据进行解密)：
+
+  ```js
+  const validate = (validations) => {
+  	return async (req, res, next) => {
+  		// 是否加密
+  		let isEncryption = req.headers.isencryption;
+  		// 解密post
+  		if (isEncryption == "true") req.body = decrypt(req.body.toString());
+  		console.log("请求：", req.body);
+
+  		// 执行验证规则
+  		for (const validation of validations) {
+  			const result = await validation.run(req);
+  			if (result.errors.length) break;
+  		}
+  		// 检查验证结果
+  		const errors = validationResult(req);
+  		if (!errors.isEmpty()) return sendResponse(res, 400, "error", errors.array()[0].msg);
+  		next();
+  	};
+  };
+  ```
+
+- 返回加密(在封装的返回数据进行加密)：
+  ```js
+  const sendResponse = (res, statusCode, status, message, data = null) => {
+  	console.log("响应：", { status, code: statusCode, message, data });
+  	// 是否加密
+  	let isEncryption = res.req.headers.isencryption;
+  	// 加密
+  	if (isEncryption == "true") data = encrypt(JSON.stringify(data));
+  	const response = {
+  		status,
+  		code: statusCode,
+  		message,
+  		data
+  	};
+  	res.status(statusCode).json(response);
+  };
+  ```
+- 注意：
+  - 前端需要设置请求头 isEncryption(可以自己任意定义判断是否加密)
+  - 前端需要设置请求头 Content-Type 为 'text/plain'
+  - 后端在 app.json 需要配置解析文本中间件：app.use(express.raw({ type: "text/plain" }));
+  - 加密解密需要自己封装

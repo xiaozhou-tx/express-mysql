@@ -2,16 +2,12 @@ var express = require("express");
 var router = express.Router();
 var db = require("../mysql/index");
 const sendResponse = require("../utils/response.js"); // 响应函数
-const { verifyToken } = require("../utils/token.js"); // 验证token
+const createRoute = require("../utils/router.js"); // 路由注册函数
 
 // 获取用户列表
-router.get("/getUserList", verifyToken, async (req, res) => {
-	try {
-		const result = await db.query("select * from users");
-		sendResponse(res, 200, "success", "请求成功", result);
-	} catch (error) {
-		sendResponse(res, 500, "error", error.message);
-	}
+createRoute(router, "get", "/getUserList", async (req, res) => {
+	const result = await db.query("select * from users");
+	sendResponse(res, 200, "success", "请求成功", result);
 });
 
 module.exports = router;

@@ -16,6 +16,7 @@ app.set("view engine", "jade");
 // 中间件
 app.use(logger("dev")); // 日志
 app.use(express.json()); // 解析JSON
+app.use(express.raw({ type: "text/plain" })); // 解析原始数据
 app.use(express.urlencoded({ extended: false })); // 解析URL-encoded
 app.use(cookieParser()); // 解析Cookie
 app.use(express.static(path.join(__dirname, "public"))); // 静态文件
