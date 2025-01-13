@@ -9,17 +9,17 @@ const { encrypt } = require("./sm4");
  * @param {*} data 数据
  */
 const sendResponse = (res, statusCode, status, message, data = null) => {
-	console.log("响应：", { status, code: statusCode, message, data });
 	// 是否加密
 	let isEncryption = res.req.headers.isencryption;
-	// 加密
-	if (isEncryption == "true") data = encrypt(JSON.stringify(data));
-	const response = {
+	let response = {
 		status,
 		code: statusCode,
 		message,
 		data
 	};
+	console.log("响应：", response);
+	// 加密
+	if (isEncryption == "true") response = encrypt(JSON.stringify(response));
 	res.status(statusCode).json(response);
 };
 

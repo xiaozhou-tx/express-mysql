@@ -1,3 +1,5 @@
+const sendResponse = require("./response.js"); // 响应函数
+
 /**
  * 通用路由函数
  * @param {*} router 路由对象

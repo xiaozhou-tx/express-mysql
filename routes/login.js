@@ -66,8 +66,10 @@ createRoute(router, "post", "/register", validate(registerValidators), async (re
 		let userid = uuidv4();
 		// 生成token
 		const token = generateToken({ userid, username });
+		// 生成创建时间
+		let createTime = new Date().getTime();
 		// 插入数据
-		await db.query("insert into users (userid,username, password,token) values (?,?,?,?)", [userid, username, password, token]);
+		await db.query("insert into users (userid,username, password,token,createTime) values (?,?,?,?,?)", [userid, username, password, token, createTime]);
 		// 返回数据
 		const result1 = await db.query("select * from users where username =? and password =?", [username, password]);
 		sendResponse(res, 200, "success", "注册成功", result1[0]);

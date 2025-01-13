@@ -2,7 +2,9 @@
 
 # 1. 项目简介
 
-本项目是一个 Express 框架搭配 mysql 的后台管理系统后端开发
+- 本项目是一个 Express 框架搭配 mysql 的后台管理系统后端开发
+
+- github 地址：[点击跳转](https://github.com/xiaozhou-tx/express-mysql)
 
 # 2.创建项目
 
@@ -309,9 +311,17 @@
   	return async (req, res, next) => {
   		// 是否加密
   		let isEncryption = req.headers.isencryption;
+
   		// 解密post
-  		if (isEncryption == "true") req.body = decrypt(req.body.toString());
-  		console.log("请求：", req.body);
+  		if (req.method == "POST" && isEncryption == "true" && req.body) {
+  			req.body = decrypt(req.body.toString());
+  			console.log("请求：", req.body);
+  		}
+  		// 解密get
+  		if (req.method == "GET" && isEncryption == "true" && req.url.split("?")[1]) {
+  			req.query = decrypt(req.url.split("?")[1]);
+  			console.log("请求：", req.query);
+  		}
 
   		// 执行验证规则
   		for (const validation of validations) {
@@ -327,22 +337,24 @@
   ```
 
 - 返回加密(在封装的返回数据进行加密)：
+
   ```js
   const sendResponse = (res, statusCode, status, message, data = null) => {
-  	console.log("响应：", { status, code: statusCode, message, data });
   	// 是否加密
   	let isEncryption = res.req.headers.isencryption;
-  	// 加密
-  	if (isEncryption == "true") data = encrypt(JSON.stringify(data));
-  	const response = {
+  	let response = {
   		status,
   		code: statusCode,
   		message,
   		data
   	};
+  	console.log("响应：", response);
+  	// 加密
+  	if (isEncryption == "true") response = encrypt(JSON.stringify(response));
   	res.status(statusCode).json(response);
   };
   ```
+
 - 注意：
   - 前端需要设置请求头 isEncryption(可以自己任意定义判断是否加密)
   - 前端需要设置请求头 Content-Type 为 'text/plain'

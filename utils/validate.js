@@ -17,9 +17,18 @@ const validate = (validations) => {
 	return async (req, res, next) => {
 		// 是否加密
 		let isEncryption = req.headers.isencryption;
+
 		// 解密post
-		if (isEncryption == "true") req.body = decrypt(req.body.toString());
-		console.log("请求：", req.body);
+		if (req.method == "POST" && isEncryption == "true" && req.body) {
+			req.body = decrypt(req.body.toString());
+			console.log("请求：", req.body);
+		}
+		// 解密get
+		if (req.method == "GET" && isEncryption == "true" && req.url.split("?")[1]) {
+			req.query = decrypt(req.url.split("?")[1]);
+			console.log("请求：", req.query);
+		}
+
 		// 执行验证规则
 		for (const validation of validations) {
 			const result = await validation.run(req);
