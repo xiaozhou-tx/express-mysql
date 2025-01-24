@@ -7,8 +7,8 @@ const { SECRET_KEY, EXPIRES_IN } = require("./config.js");
  * @param {Object} payload - 要包含在 token 中的数据
  * @returns {String} 生成的 token
  */
-const generateToken = (payload) => {
-	return jwt.sign(payload, SECRET_KEY, { expiresIn: EXPIRES_IN });
+const generateToken = (payload, expiresIn = EXPIRES_IN) => {
+	return jwt.sign(payload, SECRET_KEY, { expiresIn });
 };
 
 /**

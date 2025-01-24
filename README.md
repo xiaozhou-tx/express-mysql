@@ -191,7 +191,7 @@
   		if (result.length > 0) {
   			sendResponse(res, 200, "success", "登录成功", result);
   		} else {
-  			sendResponse(res, 401, "error", "登录失败");
+  			sendResponse(res, 400, "error", "登录失败");
   		}
   	} catch (error) {
   		sendResponse(res, 500, "error", error.message);
@@ -242,7 +242,7 @@
   			result[0].token = token;
   			sendResponse(res, 200, "success", "登录成功", result[0]);
   		} else {
-  			sendResponse(res, 401, "error", "登录失败");
+  			sendResponse(res, 400, "error", "登录失败");
   		}
   	} catch (error) {
   		sendResponse(res, 500, "error", error.message);
